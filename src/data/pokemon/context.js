@@ -32,6 +32,7 @@ export const Provider = ({
       const pokemon = await getPokemon().catch((e) => setError(e))
       window.localStorage.setItem(pokeKey, JSON.stringify(pokemon));
       setData(mutatePokemon(pokemon));
+      return;
     }
 
     const checkCache = window.localStorage.getItem(pokeKey);
