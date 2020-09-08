@@ -3,98 +3,79 @@ import React, {
 } from 'react';
 import {
   Consumer as PokemonConsumer,
-} from '../../data/pokemon'
+} from '../../context/pokemon'
 import {
   Provider as GameStateProvider,
-  Consumer as GameStateConsumer,
+  WithGameState,
   STATE,
-} from '../../data/game'
+} from '../../context/game'
 import {
   ShuffleArray,
 } from '../../utils'
 
-function Actions() {
-  return (
-    <GameStateConsumer>
-      {(context) => {
-        if (!context) return null;
-        const {
-          skip,
-          reset,
-          state,
-        } = context;
+const Actions = WithGameState(({
+  skip,
+  help,
+  reset,
+  state,
+  queue,
+}) => {
+  if (state === STATE.IN_PROGRESS) {
+    return (
+      <>
+        <p>{queue.length} pokemon left!</p>
+        <button onClick={() => skip()}>skip</button>
+        <button onClick={() => help()}>help</button>
+      </>
+    )
+  }
 
-        if (state === STATE.IN_PROGRESS) {
-          return (
-            <>
-              <button onClick={() => skip()}>skip</button>
-            </>
-          )
-        }
+  if (state === STATE.SUCCESS) {
+    return (
+      <>
+        <button onClick={() => reset()}>go again</button>
+      </>
+    )
+  }
 
-        if (state === STATE.SUCCESS) {
-          return (
-            <>
-              <button onClick={() => reset()}>go again</button>
-            </>
-          )
-        }
+  return null;
+})
 
-        return null
-      }}
-    </GameStateConsumer>
-  )
-}
-
-function Name() {
+const Name = WithGameState(({
+  helpText,
+  pop,
+  validate,
+}) => {
   const [value, setValue] = useState('')
+  const [err, setErr] = useState(false)
   return (
-    <GameStateConsumer>
-      {(context) => {
-        if (!context) return null;
-        const {
-          current,
-          pop,
-        } = context;
-
-        return (
-          <>
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              console.log('guess: ', value, 'target: ', current.name)
-              if (current.name.toLocaleLowerCase().includes(value.toLocaleLowerCase())) {
-                pop();
-                setValue('');
-              }
-            }}>
-              <input type="text" onChange={({ target }) => setValue(target.value)} value={value} />
-              <button type="submit">guess</button>
-            </form>
-          </>
-        )
-      }}
-    </GameStateConsumer>
+    <>
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        if (validate(value)) {
+          pop()
+          setValue('')
+          setErr(false);
+          return
+        }
+        setErr(true)
+      }}>
+        { helpText && (<input type="text" readonly disabled value={helpText} />)}
+        <input type="text" onChange={({ target }) => setValue(target.value)} value={value} />
+        <button type="submit">guess</button>
+        { err && (<p>wrong!</p>)}
+      </form>
+    </>
   )
-}
+})
 
-function Sprite() {
-  return (
-    <GameStateConsumer>
-      {(context) => {
-        if (!context) return null;
-        const {
-          current,
-        } = context;
-
-        return (
-          <>
-            <img src={current.sprite} alt={`??? sprite`} style={{ height: '240px', width: '240px' }} />
-          </>
-        )
-      }}
-    </GameStateConsumer>
-  )
-}
+const Sprite = WithGameState(({
+  current,
+}) => (
+  <>
+    <img src={current.sprite} alt={`??? sprite`} style={{ height: '240px', width: '240px' }} />
+  </>
+))
 
 export function Guess() {
   return (
@@ -109,7 +90,6 @@ export function Guess() {
         }
 
         if (pokemon) {
-          debugger;
           return (
             <GameStateProvider queue={ShuffleArray(pokemon)}>
               <Actions />

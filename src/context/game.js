@@ -5,7 +5,7 @@ import React, {
 } from 'react';
 import {
   ShuffleArray,
-} from '../../utils'
+} from '../utils'
 
 export const STATE = {
   IN_PROGRESS: 'IN PROGRESS',
@@ -15,7 +15,8 @@ export const STATE = {
 const ACTION = {
   POP: 'POP',
   SKIP: 'SKIP',
-  RESET: 'RESET'
+  RESET: 'RESET',
+  HELP: 'HELP',
 }
 /**
  * state: 'IN PROGRESS', 'SUCCESS', 'FAILURE'
@@ -26,7 +27,6 @@ const reducer = (
   prevState,
   action,
 ) => {
-  debugger;
   switch (action.type) {
     case ACTION.POP: {
       const { queue } = prevState;
@@ -34,7 +34,6 @@ const reducer = (
 
       if (!nextMonster) {
         return {
-          queue: [],
           state: STATE.SUCCESS,
         };
       }
@@ -66,9 +65,23 @@ const reducer = (
         current: Array.from(shuffled).shift()
       }
     }
+    case ACTION.HELP: {
+      const { current } = prevState
+      const helpText = ShuffleArray(current.name.split('')).join('')
+      return {
+        ...prevState,
+        helpText,
+      }
+    }
     default:
       return prevState;
   }
+}
+
+const VALIDATION_MAP = {
+  default: (a, b) => a.toLocaleLowerCase() === b.toLocaleLowerCase(),
+  29: (a, b) => a.toLocaleLowerCase() === 'nidoran' || VALIDATION_MAP.default(a, b),
+  32: (a, b) => a.toLocaleLowerCase() === 'nidoran' || VALIDATION_MAP.default(a, b),
 }
 
 const { Consumer: C, Provider: P } = createContext(null);
@@ -79,13 +92,15 @@ export const Provider = ({
 }) => {
   const [state, dispatch] = useReducer(reducer, {
     state: STATE.IN_PROGRESS,
-    queue: Array.from(queue).slice(1, queue.length - 1), 
+    queue: Array.from(queue).slice(1, queue.length), 
     current: Array.from(queue).shift()
   });
   const pop = useCallback(() => dispatch({ type: ACTION.POP }), [dispatch]);
   const skip = useCallback(() => dispatch({ type: ACTION.SKIP }), [dispatch]);
   const reset = useCallback(() => dispatch({ type: ACTION.RESET, queue }), [dispatch, queue]);
-
+  const validator = VALIDATION_MAP[state.current.id] || VALIDATION_MAP['default'];
+  const validate = (guess) => validator(guess, state.current.name)
+  const help = useCallback(() => dispatch({ type: ACTION.HELP }), [dispatch])
   return (
     <P
       value={{
@@ -94,9 +109,22 @@ export const Provider = ({
         pop,
         skip,
         reset,
+        validate,
+        help,
       }}
     >
       {children}
     </P>
+  )
+}
+
+export const WithGameState = Component => (props) => {
+  return (
+    <Consumer>
+      {(context) => {
+        if (!context) return null;
+        return (<Component {...context} {...props} />)
+      }}
+    </Consumer>
   )
 }

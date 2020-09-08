@@ -1,6 +1,6 @@
 import React from 'react';
 import { Guess } from './pages/Guess';
-import { Provider } from './data/pokemon'
+import { Provider } from './context/pokemon'
 
 export function App() {
   return (
