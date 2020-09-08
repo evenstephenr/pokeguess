@@ -1,3 +1,4 @@
+import React from 'react'
 // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
 export function ShuffleArray(arr) {
   const array = Array.from(arr);
@@ -6,4 +7,14 @@ export function ShuffleArray(arr) {
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array
+}
+export const WithState = Consumer => Component => props => {
+  return (
+    <Consumer>
+      {(context) => {
+        if (!context) return null;
+        return (<Component {...context} {...props} />)
+      }}
+    </Consumer>
+  )
 }

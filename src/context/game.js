@@ -5,6 +5,7 @@ import React, {
 } from 'react';
 import {
   ShuffleArray,
+  WithState,
 } from '../utils'
 
 export const STATE = {
@@ -118,13 +119,4 @@ export const Provider = ({
   )
 }
 
-export const WithGameState = Component => (props) => {
-  return (
-    <Consumer>
-      {(context) => {
-        if (!context) return null;
-        return (<Component {...context} {...props} />)
-      }}
-    </Consumer>
-  )
-}
+export const WithGameState = Component => props => WithState(Consumer)(Component)(props);
