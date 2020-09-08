@@ -2,35 +2,44 @@ import React, {
   useState,
 } from 'react';
 import {
-  Consumer as PokemonConsumer,
+  useHistory,
+} from "react-router-dom";
+
+import {
+  WithPokeState,
 } from '../../context/pokemon'
 import {
-  Provider as GameStateProvider,
-  WithGameState,
   STATE,
-} from '../../context/game'
-import {
-  ShuffleArray,
-} from '../../utils'
+  useDefaultGame,
+} from '../../hooks/game'
 
-const Actions = WithGameState(({
+const Countdown = ({
+  queue,
+}) => (
+  <>
+    <div>{queue.length} pokemon left!</div>
+  </>
+)
+
+const Actions = ({
   skip,
   help,
   reset,
   state,
-  queue,
 }) => {
+  let history = useHistory();
+
   if (state === STATE.IN_PROGRESS) {
     return (
       <>
-        <p>{queue.length} pokemon left!</p>
         <button onClick={() => skip()}>skip</button>
         <button onClick={() => help()}>help</button>
+        <button onClick={() => history.push('/')}>Quit</button>
       </>
     )
   }
 
-  if (state === STATE.SUCCESS) {
+  if (state === STATE.SUCCESS || state === STATE.FAILURE) {
     return (
       <>
         <button onClick={() => reset()}>go again</button>
@@ -39,15 +48,15 @@ const Actions = WithGameState(({
   }
 
   return null;
-})
+}
 
-const Name = WithGameState(({
+const Name = ({
   helpText,
   pop,
   validate,
+  error,
 }) => {
   const [value, setValue] = useState('')
-  const [err, setErr] = useState(false)
   return (
     <>
       <form onSubmit={(e) => {
@@ -55,52 +64,89 @@ const Name = WithGameState(({
         if (validate(value)) {
           pop()
           setValue('')
-          setErr(false);
           return
         }
-        setErr(true)
       }}>
-        { helpText && (<input type="text" readonly disabled value={helpText} />)}
+        { helpText && (<input type="text" readOnly disabled value={helpText} />)}
         <input type="text" onChange={({ target }) => setValue(target.value)} value={value} />
         <button type="submit">guess</button>
-        { err && (<p>wrong!</p>)}
+        {error && (<p>{error}</p>)}
       </form>
     </>
   )
-})
+}
 
-const Sprite = WithGameState(({
+const Sprite = ({
   current,
-}) => (
-  <>
-    <img src={current.sprite} alt={`??? sprite`} style={{ height: '240px', width: '240px' }} />
-  </>
-))
-
-export function Guess() {
+}) => {
   return (
-    <PokemonConsumer>
-      {(context) => {
-        if (!context) return null;
-        const { pokemon, error } = context;
-        if (error) {
-          return (
-            <p>Sorry, the game is undergoing maintenance, please get in touch if you want to see it back up again ASAP</p>
-          )
-        }
-
-        if (pokemon) {
-          return (
-            <GameStateProvider queue={ShuffleArray(pokemon)}>
-              <Actions />
-              <Name />
-              <Sprite />
-            </GameStateProvider>
-          )
-        }
-
-        return null
-      }}
-    </PokemonConsumer>
+    <>
+      <img src={current.sprite} alt={`??? sprite`} style={{ height: '240px', width: '240px' }} />
+    </>
   )
 }
+
+// TODO: add a timed version of the game
+// const Timer = ({
+//   dispatch,
+//   time,
+// }) => {
+//   const [timeMS, setTimeMS] = useState(time || 10000)
+//   const active = useRef(true)
+
+//   useEffect(() => {
+//     let countdown;
+//     console.log('interval')
+//     if (active.current) {
+//       countdown = setTimeout(() => {
+//         if (timeMS - 1000 <= 0) {
+//           dispatch({ type: ACTION.STOP })
+//           active.current = false;
+//           clearTimeout(countdown)
+//         }
+//         setTimeMS(timeMS - 1000);
+//       }, 1000);
+//     }
+//   }, [timeMS])
+
+//   return (
+//     <p>Time left: {timeMS / 1000} seconds!</p>
+//   )
+// }
+
+const Debug = ({ current, state }) => (
+  <pre>
+    {JSON.stringify(state, null, 2)}
+    {JSON.stringify(current, null, 2)}
+  </pre>
+)
+
+export const Guess = WithPokeState(({
+  debug = false,
+  pokemon,
+}) => {
+  const {
+    current,
+    queue,
+    helpText,
+    pop,
+    validate,
+    skip,
+    help,
+    reset,
+    state,
+    error,
+  } = useDefaultGame({
+    queue: pokemon
+  })
+
+  return (
+    <>
+      <Countdown queue={queue} />
+      <Actions skip={skip} help={help} reset={reset} state={state} />
+      <Name helpText={helpText} pop={pop} validate={validate} error={error} />
+      <Sprite current={current} />
+      {/* <Timer dispatch={dispatch} /> */}
+      { debug && <Debug current={current} state={state} />}
+    </>
+)})

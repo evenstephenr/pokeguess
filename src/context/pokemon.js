@@ -3,6 +3,9 @@ import React, {
   useState,
   useEffect,
 } from 'react';
+import {
+  WithState,
+} from '../utils'
 
 function getPokemon() {
   return new Promise(async (resolve, reject) => {
@@ -70,7 +73,14 @@ export const Provider = ({
         error,
       }}
     >
-      {children}
+      { 
+        (error || !data) && (
+          <p>Sorry, the game is undergoing maintenance, please get in touch if you want to see it back up again ASAP</p>
+        )
+      }
+      {data && children}
     </P>
   )
 }
+
+export const WithPokeState = Component => props => WithState(Consumer)(Component)(props);

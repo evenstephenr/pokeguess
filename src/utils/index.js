@@ -8,6 +8,7 @@ export function ShuffleArray(arr) {
   }
   return array
 }
+/** Use this to wire up any Context provider as an HOC */
 export const WithState = Consumer => Component => props => {
   return (
     <Consumer>
