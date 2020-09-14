@@ -1,5 +1,8 @@
 import {
   useReducer,
+  useEffect,
+  useState,
+  useRef,
 } from 'react';
 import {
   ShuffleArray,
@@ -107,7 +110,6 @@ const useGameStateReducer = ({ queue }) => {
   })
 }
 
-// TODO: try using regex here
 const VALIDATION_MAP = {
   default: (a, b) => a.toLocaleLowerCase() === b.toLocaleLowerCase(),
   29: (a, b) => a.toLocaleLowerCase() === 'nidoran' || VALIDATION_MAP.default(a, b),
@@ -141,4 +143,92 @@ export function useDefaultGame({
     validate,
     error: ERRORS[state.errorIndex]
   }
+}
+
+export function useTimedGame({
+  queue,
+  timer = 3000,
+}) {
+  const gameState = useDefaultGame({ queue })
+  const [timeMS, setTimeMS] = useState(timer)
+  const countdown = useRef();
+
+  useEffect(() => {
+    countdown.current = setTimeout(() => {
+      if (timeMS - 1000 <= 0) {
+        gameState.dispatch({ type: ACTION.STOP })
+        clearTimeout(countdown.current)
+        setTimeMS(0)
+        return;
+      }
+      setTimeMS(timeMS - 1000);
+    }, 1000);
+  }, [timeMS, gameState])
+
+  /** For now, hook into dispatch to extend the core game logic */
+  const dispatch = (action) => {
+    if (action.type === ACTION.POP) {
+      clearTimeout(countdown.current)
+      setTimeMS(timer)
+      gameState.dispatch(action);
+      return;
+    }
+    if (action.type === ACTION.RESET) {
+      clearTimeout(countdown.current)
+      setTimeMS(timer)
+      gameState.dispatch({
+        ...action,
+        queue,
+      });
+      return;
+    }
+    gameState.dispatch(action);
+  }
+
+  return {
+    ...gameState,
+    timeMS,
+    dispatch
+  }
+}
+
+export function useHardcoreGame({
+  queue,
+  allowedFailures = 10,
+}) {
+  const gameState = useDefaultGame({ queue })
+  const [failuresLeft, setFailuresLeft] = useState(allowedFailures)
+
+  /** For now, hook into validate to extend the core game logic */
+  const validate = (guess) => {
+    const validationResult = gameState.validate(guess)
+    if (!validationResult) {
+      const updatedFailures = failuresLeft - 1
+      if (updatedFailures <= 0) {
+        gameState.dispatch({ type: ACTION.STOP })
+      }
+      setFailuresLeft(updatedFailures)
+    }
+    return validationResult;
+  }
+  /** For now, hook into dispatch to extend the core game logic */
+  const dispatch = (action) => {
+    if (action.type === ACTION.RESET) {
+      setFailuresLeft(allowedFailures)
+      gameState.dispatch({
+        ...action,
+        queue,
+      });
+      return;
+    }
+    gameState.dispatch(action);
+  }
+
+  return {
+    ...gameState,
+    dispatch,
+    validate,
+    allowedFailures: failuresLeft,
+  }
+
 }

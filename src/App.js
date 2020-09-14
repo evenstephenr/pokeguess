@@ -5,7 +5,11 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import { Guess } from './pages/Guess';
+import {
+  Guess,
+  Hardcore,
+  TimeAttack,
+} from './pages';
 import { Provider } from './context/pokemon'
 
 const Home = () => (
@@ -37,10 +41,10 @@ export function App() {
               <Guess debug />
             </Route>
             <Route path="/hardcore" exact>
-              <div>TODO</div>
+              <Hardcore debug />
             </Route>
             <Route path="/time-attack" exact>
-              <div>TODO</div>
+              <TimeAttack debug />
             </Route>
             <Route path="/" exact>
               <Home />
