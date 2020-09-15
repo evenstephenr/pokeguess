@@ -1,29 +1,14 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Pokeguess
 
-## Available Scripts
+Pokeguess is a fun and light-hearted game meant to test your knowledge of the first generation of Pokemon!
 
-In the project directory, you can run:
+## Getting started
 
-### `npm start`
+In order to run this app locally, you should be able to clone or fork the repo, run `npm i`, and then start the app in dev or debug mode, using `npm run start` or `npm run debug`, respectively.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+> Note: the scripts in `package.json` assume you are running this app in a windows environment. Go ahead and edit `package.json` to work properly if you are not running this app in a windows environment!
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Credits
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+* This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app)
+* This project was inspired by [Cassidoo's Pokemon typing game](https://github.com/cassidoo/typing-game). Follow her on twitter [@cassidoo](https://twitter.com/cassidoo)!
