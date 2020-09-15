@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "936ea53a87c6b806c8730f54ab50b8d7",
+    "revision": "505735fb9cc26e859b27a1640ae2a055",
     "url": "/pokeguess/index.html"
   },
   {
-    "revision": "2ac42662352afdc393aa",
+    "revision": "3b7f7c01a1e9f8a4881a",
     "url": "/pokeguess/static/css/main.fbd88aad.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/pokeguess/static/js/2.0323ff02.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "2ac42662352afdc393aa",
-    "url": "/pokeguess/static/js/main.5a9005cc.chunk.js"
+    "revision": "3b7f7c01a1e9f8a4881a",
+    "url": "/pokeguess/static/js/main.3d0cdeb0.chunk.js"
   },
   {
     "revision": "f0e7299ce1096fcd8277",

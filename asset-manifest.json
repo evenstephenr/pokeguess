@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/pokeguess/static/css/main.fbd88aad.chunk.css",
-    "main.js": "/pokeguess/static/js/main.5a9005cc.chunk.js",
-    "main.js.map": "/pokeguess/static/js/main.5a9005cc.chunk.js.map",
+    "main.js": "/pokeguess/static/js/main.3d0cdeb0.chunk.js",
+    "main.js.map": "/pokeguess/static/js/main.3d0cdeb0.chunk.js.map",
     "runtime-main.js": "/pokeguess/static/js/runtime-main.310e3620.js",
     "runtime-main.js.map": "/pokeguess/static/js/runtime-main.310e3620.js.map",
     "static/js/2.0323ff02.chunk.js": "/pokeguess/static/js/2.0323ff02.chunk.js",
     "static/js/2.0323ff02.chunk.js.map": "/pokeguess/static/js/2.0323ff02.chunk.js.map",
     "index.html": "/pokeguess/index.html",
-    "precache-manifest.bd2c88be5477f553267024c9f5a9e601.js": "/pokeguess/precache-manifest.bd2c88be5477f553267024c9f5a9e601.js",
+    "precache-manifest.5265defb661855b9771a350c6c647f09.js": "/pokeguess/precache-manifest.5265defb661855b9771a350c6c647f09.js",
     "service-worker.js": "/pokeguess/service-worker.js",
     "static/css/main.fbd88aad.chunk.css.map": "/pokeguess/static/css/main.fbd88aad.chunk.css.map",
     "static/js/2.0323ff02.chunk.js.LICENSE.txt": "/pokeguess/static/js/2.0323ff02.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.310e3620.js",
     "static/js/2.0323ff02.chunk.js",
     "static/css/main.fbd88aad.chunk.css",
-    "static/js/main.5a9005cc.chunk.js"
+    "static/js/main.3d0cdeb0.chunk.js"
   ]
 }
