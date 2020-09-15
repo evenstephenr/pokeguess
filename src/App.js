@@ -46,7 +46,7 @@ export const App = () => (
     }}
   >
     <Provider>
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <Switch>
           <Route path="/casual" exact>
             <Guess />
@@ -59,6 +59,9 @@ export const App = () => (
           </Route>
           <Route path="/" exact>
             <Home />
+          </Route>
+          <Route path="*">
+            <div>Oh no :(</div>
           </Route>
         </Switch>
       </Router>
