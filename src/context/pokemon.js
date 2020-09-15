@@ -5,12 +5,12 @@ import React, {
 } from 'react';
 import {
   WithState,
-} from '../utils'
+} from '../utils';
 
 function getPokemon() {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await fetch('https://pokeapi.co/api/v2/generation/1')
+      const response = await fetch('https://pokeapi.co/api/v2/generation/1');
       if (response.ok) {
         const results = await response.json();
         resolve(results);
@@ -18,8 +18,8 @@ function getPokemon() {
     } catch (e) {
       reject(e.message);
     }
-    reject('pokeapi err, service unavailable :(')
-  })
+    reject('pokeapi err, service unavailable :(');
+  });
 }
 
 function mutatePokemon(d) {
@@ -31,11 +31,11 @@ function mutatePokemon(d) {
       id,
       name,
       sprite: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
-    }
-  }).sort((a, b) => a.id - b.id)
+    };
+  }).sort((a, b) => a.id - b.id);
 }
 
-const { Consumer: C, Provider: P } = createContext(null)
+const { Consumer: C, Provider: P } = createContext(null);
 export const Consumer = C;
 export const Provider = ({
   children,
@@ -63,8 +63,8 @@ export const Provider = ({
     return () => {
       setData(null);
       setError(null);
-    }
-  }, [])
+    };
+  }, []);
 
   return (
     <P
@@ -80,7 +80,7 @@ export const Provider = ({
       }
       {data && children}
     </P>
-  )
-}
+  );
+};
 
 export const WithPokeState = Component => props => WithState(Consumer)(Component)(props);

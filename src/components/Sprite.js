@@ -1,12 +1,16 @@
-import React from 'react'
+import React from 'react';
+
 export const Sprite = ({
   src,
   alt = '???'
-}) => {
-  return (
-    <>
-      {/* TODO: should we use .scss for styles? */}
-      <img src={src} alt={alt} style={{ height: '240px', width: '240px' }} />
-    </>
-  )
-}
+}) => (
+  <img 
+    src={src} 
+    alt={alt} 
+    style={{
+      maxWidth: '150px',
+      height: '150px',
+      margin: 'auto',
+    }}
+  />
+);

@@ -1,8 +1,7 @@
-import React from 'react'
+import React from 'react';
+
 export const Remainder = ({
   queue,
 }) => (
-  <>
-    <div>{queue.length} pokemon left!</div>
-  </>
-)
+  <p>{queue.length} pokemon left!</p>
+);

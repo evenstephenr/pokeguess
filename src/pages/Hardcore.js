@@ -9,26 +9,24 @@ import {
   Name,
   Sprite,
   Remainder,
-  Hint,
-} from '../components'
+  Centered,
+} from '../components';
 import {
   WithPokeState,
-} from '../context/pokemon'
+} from '../context/pokemon';
 import {
   STATE,
   ACTION,
   useHardcoreGame,
-} from '../hooks/game'
+} from '../hooks/game';
 
 export const Hardcore = WithPokeState(({
-  debug = false,
   pokemon,
 }) => {
-  const history = useHistory()
+  const history = useHistory();
   const {
     current,
     queue,
-    helpText,
     validate,
     state,
     error,
@@ -37,37 +35,34 @@ export const Hardcore = WithPokeState(({
   } = useHardcoreGame({
     queue: pokemon,
     allowedFailures: 5,
-  })
+  });
 
   return (
     <>
-      <Remainder queue={queue} />
-      <p>Guesses left: {allowedFailures}</p>
-      <ActionBar>
-        {state === STATE.IN_PROGRESS && (
-          <>
-            <ActionButton label="Quit" action={() => history.push('/')} />
-          </>
+      <Centered>
+        <Sprite src={current.sprite} />
+        {state !== STATE.FAILURE && (
+          <Name validate={validate} pop={() => dispatch({ type: ACTION.POP })} />
         )}
-        {(state === STATE.SUCCESS || state === STATE.FAILURE) && (
-          <>
-            <ActionButton label="Play again" action={() => dispatch({ type: ACTION.RESET })} />
-            <ActionButton label="Main Menu" action={() => history.push('/')} />
-          </>
-        )}
-      </ActionBar>
-      {state !== STATE.FAILURE && (
-        <Name validate={validate} pop={() => dispatch({ type: ACTION.POP })} />
-      )}
-      <Sprite src={current.sprite} />
-      { error && (<p>{error}</p>)}
-      { helpText && (<Hint value={helpText} />)}
-      { debug && (
-        <>
-          <Debug data={state} />
-          <Debug data={current} />
-        </>
-      )}
+        { error && (<p>{error}</p>)}
+        <p>Guesses left: {allowedFailures}</p>
+        <ActionBar>
+          {state === STATE.IN_PROGRESS && (
+            <>
+              <ActionButton label="Quit" action={() => history.push('/')} />
+            </>
+          )}
+          {(state === STATE.SUCCESS || state === STATE.FAILURE) && (
+            <>
+              <ActionButton label="Play again" action={() => dispatch({ type: ACTION.RESET })} />
+              <ActionButton label="Main Menu" action={() => history.push('/')} />
+            </>
+          )}
+        </ActionBar>
+        <Remainder queue={queue} />
+        <Debug data={state} />
+        <Debug data={current} />
+      </Centered>
     </>
-  )
-})
+  );
+});

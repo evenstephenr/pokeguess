@@ -1,3 +1,3 @@
-export * from './Guess'
-export * from './Hardcore'
-export * from './TimeAttack'
+export * from './Guess';
+export * from './Hardcore';
+export * from './TimeAttack';

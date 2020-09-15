@@ -10,17 +10,17 @@ import {
   Sprite,
   Remainder,
   Hint,
-} from '../components'
+  Centered,
+} from '../components';
 import {
   WithPokeState,
-} from '../context/pokemon'
+} from '../context/pokemon';
 import {
   STATE,
   useDefaultGame,
-} from '../hooks/game'
+} from '../hooks/game';
 
 export const Guess = WithPokeState(({
-  debug = false,
   pokemon,
 }) => {
   const history = useHistory()
@@ -37,34 +37,33 @@ export const Guess = WithPokeState(({
     error,
   } = useDefaultGame({
     queue: pokemon
-  })
+  });
 
   return (
     <>
-      <Remainder queue={queue} />
-      <ActionBar>
-        { state === STATE.IN_PROGRESS && (
-          <>
-            <ActionButton label="Skip" action={skip} />
-            <ActionButton label="Help" action={help} />
-            <ActionButton label="Quit" action={() => history.push('/')} />
-          </>
-        )}
-        { state === STATE.SUCCESS && (
-          <>
-            <ActionButton label="Play again" action={reset} />
-          </>
-        )}
-      </ActionBar>
-      <Name validate={validate} pop={pop} />
-      <Sprite src={current.sprite} />
-      { error && (<p>{error}</p>)}
-      { helpText && (<Hint value={helpText} />)}
-      { debug && (
-        <>
-          <Debug data={state} />
-          <Debug data={current} />
-        </>
-      )}
+      <Centered>
+        <Remainder queue={queue} />
+        <Name validate={validate} pop={pop} />
+        <Sprite src={current.sprite} />
+        {helpText && (<Hint value={helpText} />)}
+        {error && (<p>{error}</p>)}
+        <ActionBar>
+          { state === STATE.IN_PROGRESS && (
+            <>
+              <ActionButton label="Help" action={help} />
+              <ActionButton label="Skip" action={skip} />
+              <ActionButton label="Quit" action={() => history.push('/')} />
+            </>
+          )}
+          { state === STATE.SUCCESS && (
+            <>
+              <ActionButton label="Play again" action={reset} />
+            </>
+          )}
+        </ActionBar>
+        <Debug data={state} />
+        <Debug data={current} />
+      </Centered>
     </>
-)})
+  );
+});
